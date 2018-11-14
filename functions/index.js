@@ -4,26 +4,29 @@ const _ = require('lodash');
 
 admin.initializeApp();
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
+exports.helloWorld = functions.https.onCall((request, response) => {
+  console.log(`hello, world!`);
   response.send('Hello from Firebase!');
 });
 
 exports.addDoctor = functions.https.onCall((data, context) => {
-    const {email} = data;
-    return grantTeacherRole(email).then((result)=> {
-        return {
-            result: `Request is fulfilled ${email} is now a doctor!`
-        }
-    })
-})
+
+  const { email } = data;
+  return grantTeacherRole(email).then(result => {
+    return {
+      result: `Request is fulfilled ${email} is now a doctor!`
+    };
+  });
+});
 
 async function grantTeacherRole(email) {
+  console.log(`grantTeacherRole for ${email} user`);
   const user = await admin.auth().getUserByEmail(email);
   //custom claims check
   if (user.customClaims && _.isEmpty(user.customClaims)) {
     return;
   }
-  return admin.auth.setCustomUserClaims(user.uid, {
+  return admin.auth().setCustomUserClaims(user.uid, {
     doctor: true
   });
 }
