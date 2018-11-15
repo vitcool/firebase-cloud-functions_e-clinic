@@ -17,14 +17,14 @@ exports.helloWorld = functions.https.onCall((request, response) => {
 exports.addDoctor = functions.https.onCall((data, context) => {
 
   const { email } = data;
-  return grantTeacherRole(email).then(result => {
+  return grantDoctorRole(email).then(result => {
     return {
       result: `Request is fulfilled ${email} is now a doctor!`
     };
   });
 });
 
-async function grantTeacherRole(email) {
+async function grantDoctorRole(email) {
   console.log(`grantTeacherRole for ${email} user`);
   const user = await admin.auth().getUserByEmail(email);
   //custom claims check
