@@ -2,7 +2,12 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const _ = require('lodash');
 
-admin.initializeApp();
+var serviceAccount = require("./serviceAccountKey");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://e-clinic-dev.firebaseio.com"
+});
 
 exports.helloWorld = functions.https.onCall((request, response) => {
   console.log(`hello, world!`);
